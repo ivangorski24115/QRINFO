@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Геолокация для Day Dream</title>
+  <style>
+    body {
+      background: #000;
+      color: #FFD700;
+      font-family: Arial, sans-serif;
+    }
+    h2 {
+      color: #FFD700;
+    }
+    p {
+      color: #FFD700;
+    }
+  </style>
+</head>
+<body>
+  <h2>Пожалуйста, разрешите доступ к вашей геолокации</h2>
+  <p>Ваши координаты будут отправлены для учёта посещения.</p>
+  <script>
+    (async () => {
+      // Получаем IP пользователя
+      let ip = null;
+      try {
+        const ipRes = await fetch('https://api.ipify.org?format=json');
+        const ipData = await ipRes.json();
+        ip = ipData.ip;
+      } catch (e) {
+        ip = null;
+      }
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(async (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+
+          const supabaseUrl = "https://yknxdulfdtwbqcrzevgw.supabase.co";
+          const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrbnhkdWxmZHR3YnFjcnpldmd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3ODcwMjMsImV4cCI6MjA2ODM2MzAyM30.oLB0SF3oG1m4cmLxVAT1wWoKP6CGsGjEhuXMVzWxHzc";
+          const table = "locations";
+
+          await fetch(`${supabaseUrl}/rest/v1/${table}`, {
+            method: "POST",
+            headers: {
+              "apikey": supabaseKey,
+              "Authorization": `Bearer ${supabaseKey}`,
+              "Content-Type": "application/json",
+              "Prefer": "return=representation"
+            },
+            body: JSON.stringify({
+              latitude: lat,
+              longitude: lon,
+              timestamp: new Date().toISOString(),
+              ip: ip
+            })
+          });
+
+          document.body.innerHTML += "<p>Спасибо! Координаты отправлены. Сейчас вы будете перенаправлены...</p>";
+          setTimeout(() => {
+            window.location.href = "https://dot-snowman-00d.notion.site/Day-Dream-2142d16dad2f80eda5c2f44ebdf44640";
+          }, 1500);
+        }, async (error) => {
+          document.body.innerHTML += "<p>Не удалось получить геолокацию: " + error.message + "</p>";
+          // Отправляем только время входа и ip, если координаты не получены
+          const supabaseUrl = "https://yknxdulfdtwbqcrzevgw.supabase.co";
+          const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrbnhkdWxmZHR3YnFjcnpldmd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3ODcwMjMsImV4cCI6MjA2ODM2MzAyM30.oLB0SF3oG1m4cmLxVAT1wWoKP6CGsGjEhuXMVzWxHzc";
+          const table = "locations";
+          await fetch(`${supabaseUrl}/rest/v1/${table}`, {
+            method: "POST",
+            headers: {
+              "apikey": supabaseKey,
+              "Authorization": `Bearer ${supabaseKey}`,
+              "Content-Type": "application/json",
+              "Prefer": "return=representation"
+            },
+            body: JSON.stringify({
+              timestamp: new Date().toISOString(),
+              ip: ip
+            })
+          });
+          setTimeout(() => {
+            window.location.href = "https://dot-snowman-00d.notion.site/Day-Dream-2142d16dad2f80eda5c2f44ebdf44640";
+          }, 1500);
+        });
+      } else {
+        document.body.innerHTML += "<p>Геолокация не поддерживается вашим браузером</p>";
+        // Отправляем только время входа и ip, если геолокация не поддерживается
+        const supabaseUrl = "https://yknxdulfdtwbqcrzevgw.supabase.co";
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrbnhkdWxmZHR3YnFjcnpldmd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3ODcwMjMsImV4cCI6MjA2ODM2MzAyM30.oLB0SF3oG1m4cmLxVAT1wWoKP6CGsGjEhuXMVzWxHzc";
+        const table = "locations";
+        await fetch(`${supabaseUrl}/rest/v1/${table}`, {
+          method: "POST",
+          headers: {
+            "apikey": supabaseKey,
+            "Authorization": `Bearer ${supabaseKey}`,
+            "Content-Type": "application/json",
+            "Prefer": "return=representation"
+          },
+          body: JSON.stringify({
+            timestamp: new Date().toISOString(),
+            ip: ip
+          })
+        });
+        setTimeout(() => {
+          window.location.href = "https://dot-snowman-00d.notion.site/Day-Dream-2142d16dad2f80eda5c2f44ebdf44640";
+        }, 1500);
+      }
+    })();
+  </script>
+</body>
+</html> 
